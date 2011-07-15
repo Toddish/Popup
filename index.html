@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+		<script src="assets/js/tf-popup.jquery.js"></script>
+		<link href="assets/css/tf-popup.css" rel="stylesheet" />
+		<script>
+			$(function()
+            {
+                var options = {
+                    content					: "_examples/mailing-list.form.php",
+                    validationURL			: "_examples/mailing-list.validation.php"
+                };
+                $(".mailing_list").TFPopup(options);
+                var options = {
+                    content					: "_examples/register.form.php",
+                    validationURL			: {
+                        register_form           : "_examples/register.validation.php",
+                        login_form              : "_examples/login.validation.php"
+                    },
+                    callback                : {
+                        onSuccess               : {
+                            register_form           : function() {
+                                setTimeout(function() {
+                                    window.document.location.href = window.document.location.href;
+                                }, 2000);
+                            }, 
+                            login_form				: function() {
+                                setTimeout(function() {
+                                    window.document.location.href = window.document.location.href;
+                                }, 2000);
+                            }
+                        }
+                    }
+                };
+                $(".register").TFPopup(options);
+            });
+		</script>
+		<style>
+        p {
+            font-size:12px;
+            font-family:Verdana, sans-serif;
+        }
+        .popup {
+            width:300px;
+            background:#fff;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            border-radius:5px; 
+            padding:20px;
+            overflow:hidden;
+        }
+        .popup.large {
+            width:640px;
+        }
+        .popup.large .column {
+            width:300px;
+            float:left;
+            margin:0 20px 0 0;
+        }
+        .form_row {
+            overflow:hidden;
+        }
+        .form_row label {
+            float:left;
+            width:85px;
+        }
+        .form_row input {
+            float:right;
+            width:190px;
+        }
+        .popup h2 {
+            font-family:Arial, sans-serif;
+            font-size:15px;
+            margin:0 0 10px;
+        }
+        .form_row input, .form_row label {
+            font-family: Verdana, sans-serif;
+            font-size:12px;
+            padding:3px 5px;
+        }
+        .form_row.submit {
+            padding-left:95px;
+        }
+		
+        .form_row input.submit_button {
+            float:left;
+            width:auto;
+        }
+		
+		.invalid_row input {
+			border:1px solid red;
+		}
+		
+        p.success {
+            border:#06c906 3px solid;
+            border-radius:3px;
+            moz-border-radius:3px;
+            webkit-border-radius:3px;
+            background:#51f651;
+            padding:5px;
+            color:#FFFFFF;
+        }
+        p.error {
+            border:#d00505 3px solid;
+            border-radius:3px;
+            moz-border-radius:3px;
+            webkit-border-radius:3px;
+            background:#db4646;
+            padding:5px;
+            color:#FFFFFF;
+        }
+        </style>
+	</head>
+	<body>
+		<p>Simple <a href="#" class="mailing_list">Mailing List</a>.</p>
+        <p>Simple <a href="#" class="register">Register/Login Form</a>.</p>
+	</body>
+</html>

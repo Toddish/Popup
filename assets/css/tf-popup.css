@@ -1,0 +1,36 @@
+#tf_popup_background {
+	display:none;
+	position:fixed;
+	_position:absolute;
+	height:100%;
+	width:100%;
+	top:0;
+	left:0;
+	background:#000000;
+	z-index:9997;
+}
+
+#tf_popup_cont {
+	display:none;
+	position:fixed;
+	_position:absolute; /* hack for internet explorer 6*/
+	z-index:9999;
+}
+
+#tf_close_button {
+	color:#fff;
+	font-size:9pt;
+	padding:3px 5px;
+    text-decoration: none;
+	position:absolute;
+    top:-20px;
+    right:5px;
+	z-index:9998;
+	display:none;
+}
+
+#tf_close_button:hover {
+	color:#000;
+	background:#fff;
+	text-decoration:none;
+}
