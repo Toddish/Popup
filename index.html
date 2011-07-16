@@ -38,7 +38,9 @@
                 $(".register").TFPopup(options2);
 				var options3 = {
 					modal		: true,
-					content		: '_examples/modal.php'
+					content		: $('.modal').attr('title'),
+					useMarkup	: true,
+					ajaxContent	: false
 				};
 				$(".modal").TFPopup(options3);
             });
@@ -117,11 +119,14 @@
             padding:5px;
             color:#FFFFFF;
         }
+		.hidden {
+			display:none;
+		}
         </style>
 	</head>
 	<body>
 		<p>Simple <a href="#" class="mailing_list">Mailing List</a>.</p>
         <p>Simple <a href="#" class="register">Register/Login Form</a>.</p>
-        <p>Simple <a href="#" class="modal">Modal</a>.</p>
+        <p>Simple <a href="#" class="modal" title="This is the modal content.">Modal</a>.</p>
 	</body>
 </html>

@@ -1,7 +1,6 @@
 ;
 (function($) {
 
-	// here we go!
 	$.TFPopup = function(element, options) {
 		 var defaults = {
 			modal						: false,
@@ -10,7 +9,7 @@
 			backgroundOpacity			: 0.7,
 			popupID						: "tf_popup_cont",
 			backgroundID				: "tf_popup_background",
-			loader						: "<img src=\"assets/img/ajax_loader.gif\" />",
+			loader						: '<img src="assets/img/ajax_loader.gif" />',
 			content						: "",
 			validationURL				: "",
 			callback					: {
@@ -27,7 +26,13 @@
 				hidden		: false,
 				ID			: "tf_close_button"
 			},
-			hideFlash		: false
+			hideFlash		: false,
+			useMarkup		: false,
+			markup			: {
+				top				: '<div class="popup">',
+				bottom			: '</div>'
+			},
+			ajaxContent			: true
 		};
 
 		var plugin = this;
@@ -124,76 +129,48 @@
 			});
 		}
 		
-		plugin.loadContent = function(content) {
-			$popupCont.load(content, function(data)
+		plugin.loadContent = function(content) 
+		{
+			if (plugin.settings.ajaxContent)
 			{
-				$closeButton = $('<a id="' + plugin.settings.closeButton.ID + '" href="#">' + plugin.settings.closeButton.content + '</a>');
-				if (!plugin.settings.closeButton.hidden)
-					$closeButton.appendTo($popupCont);
-
-				// Close button click
-				$closeButton.click(function()
+				$popupCont.load(content, function(data)
 				{
-					plugin.close();
-					return false;
+					renderMarkup();
+					plugin.center();
+					(plugin.settings.callback.onOpen) ? plugin.settings.callback.onOpen(plugin) : null;
+					formCheck(data);
 				});
-				
-				$closeButton.fadeIn("fast");
+			}
+			else
+			{
+				$popupCont.append(plugin.settings.content);
+				$loader.remove();
+				renderMarkup();
 				plugin.center();
 				(plugin.settings.callback.onOpen) ? plugin.settings.callback.onOpen(plugin) : null;
-				
-				var $content = $(data);
-				if ($content.find("form").length > 0)
-				{
-					var $forms = $content.find("form");
-					$forms.each(function() {
-						var form = $('#' + $(this).attr('id'));
-						form.submit(function(event) {
-							event.preventDefault();
-							
-							var $form = $(form);
-							$content.prepend($loader);
-							plugin.center();
-							var validationURL = getValidationURL($(form).attr('id'));
-							if (validationURL)
-							{
-								$.post(validationURL, $form.serialize(), function(response){
-									// Remove any errors
-									$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
-									$form.find("." +  plugin.settings.errorClass).remove();
-									$loader.remove();
-								
-									if(response.status == "error") 
-									{
-										if (response.errors)
-										{
-											$.each(response.errors, function(key){
-												$('#' + key).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
-											});
-										}
-			
-										$form.prepend(response.feedback);
-										handleCallback('onError', $(form).attr('id'));
-									}
-									else
-									{
-										handleCallback('onSuccess', $(form).attr('id'));
-										if (response.feedback)
-											$form.before(response.feedback).remove();
-									}
-									plugin.center();
-								
-								}, "json");
-							}
-							else
-							{
-								debug("No validation URL supplied");
-							};
-                            
-						})
-					})
-				}
+				formCheck(plugin.settings.content);
+			}
+		}
+		
+		var renderMarkup = function()
+		{
+			if (plugin.settings.useMarkup)
+			{
+				var wrap = plugin.settings.markup.top + plugin.settings.markup.bottom;
+				$popupCont.wrapInner(wrap);
+			}
+			$closeButton = $('<a id="' + plugin.settings.closeButton.ID + '" href="#">' + plugin.settings.closeButton.content + '</a>');
+			if (!plugin.settings.closeButton.hidden)
+				$closeButton.appendTo($popupCont);
+
+			// Close button click
+			$closeButton.click(function()
+			{
+				plugin.close();
+				return false;
 			});
+			
+			$closeButton.fadeIn("fast");
 		}
 		
 		var getValidationURL = function(formID)
@@ -214,6 +191,61 @@
 				} else {
 					plugin.settings.callback[func](plugin);
 				}
+			}
+		}
+		
+		var formCheck = function(content)
+		{
+			var $content = $(content);
+			if ($content.find("form").length > 0)
+			{
+				var $forms = $content.find("form");
+				$forms.each(function() {
+					var form = $('#' + $(this).attr('id'));
+					form.submit(function(event) {
+						event.preventDefault();
+
+						var $form = $(form);
+						$content.prepend($loader);
+						plugin.center();
+						var validationURL = getValidationURL($(form).attr('id'));
+						if (validationURL)
+						{
+							$.post(validationURL, $form.serialize(), function(response){
+								// Remove any errors
+								$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
+								$form.find("." +  plugin.settings.errorClass).remove();
+								$loader.remove();
+
+								if(response.status == "error") 
+								{
+									if (response.errors)
+									{
+										$.each(response.errors, function(key){
+											$('#' + key).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
+										});
+									}
+
+									$form.prepend(response.feedback);
+									handleCallback('onError', $(form).attr('id'));
+								}
+								else
+								{
+									handleCallback('onSuccess', $(form).attr('id'));
+									if (response.feedback)
+										$form.before(response.feedback).remove();
+								}
+								plugin.center();
+
+							}, "json");
+						}
+						else
+						{
+							debug("No validation URL supplied");
+						};
+
+					})
+				})
 			}
 		}
 
