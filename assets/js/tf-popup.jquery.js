@@ -3,29 +3,6 @@
 
 	// here we go!
 	$.TFPopup = function(element, options) {
-
-		/*var defaults = {
-			backgroundOpacity			: 0.7,
-			popupID						: "tf_popup_cont",
-			backgroundID				: "tf_popup_background",
-			loader						: "<img src=\"assets/img/ajax_loader.gif\" />",
-			closeButton					: {
-				ID							: "tf_close_button",
-				content						: 'Close'
-			},
-			callback					: {
-				onClose						: null,
-				onOpen						: null,
-				onSucess					: null,
-				onError						: null
-			},
-			modal						: false,
-			popupWidth					: null,
-			popupHeight					: null,
-			content						: "",
-			inputParentRow
-		}*/
-		
 		 var defaults = {
 			modal						: false,
 			popupWidth					: null,

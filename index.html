@@ -14,7 +14,7 @@
                     validationURL			: "_examples/mailing-list.validation.php"
                 };
                 $(".mailing_list").TFPopup(options);
-                var options = {
+                var options2 = {
                     content					: "_examples/register.form.php",
                     validationURL			: {
                         register_form           : "_examples/register.validation.php",
@@ -35,7 +35,12 @@
                         }
                     }
                 };
-                $(".register").TFPopup(options);
+                $(".register").TFPopup(options2);
+				var options3 = {
+					modal		: true,
+					content		: '_examples/modal.php'
+				};
+				$(".modal").TFPopup(options3);
             });
 		</script>
 		<style>
@@ -117,5 +122,6 @@
 	<body>
 		<p>Simple <a href="#" class="mailing_list">Mailing List</a>.</p>
         <p>Simple <a href="#" class="register">Register/Login Form</a>.</p>
+        <p>Simple <a href="#" class="modal">Modal</a>.</p>
 	</body>
 </html>
