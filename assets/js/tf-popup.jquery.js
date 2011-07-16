@@ -143,8 +143,14 @@
 			}
 			else
 			{
-				$popupCont.append(plugin.settings.content);
-				$loader.remove();
+				if (typeof plugin.settings.content == "string")
+				{
+					$popupCont.html(plugin.settings.content);
+				}
+				else
+				{
+					$popupCont.html(plugin.settings.content.html());
+				}
 				renderMarkup();
 				plugin.center();
 				(plugin.settings.callback.onOpen) ? plugin.settings.callback.onOpen(plugin) : null;
@@ -201,10 +207,10 @@
 			{
 				var $forms = $content.find("form");
 				$forms.each(function() {
+					
 					var form = $('#' + $(this).attr('id'));
 					form.submit(function(event) {
 						event.preventDefault();
-
 						var $form = $(form);
 						$content.prepend($loader);
 						plugin.center();
