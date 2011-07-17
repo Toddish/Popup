@@ -4,7 +4,7 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-		<script src="assets/js/tf-popup.jquery.js"></script>
+		<script src="assets/js/tf-popup.jquery.min.js"></script>
 		<link href="assets/css/tf-popup.css" rel="stylesheet" />
 		<script>
 			$(function()
@@ -46,6 +46,15 @@
             });
 		</script>
 		<style>
+		h1 {
+			font-size:25px;
+			font-family:Arial, sans-serif;
+		}
+		h2 {
+			font-size:20px;
+			font-family:Arial, sans-serif;
+			margin:0 0 15px;
+		}
         p {
             font-size:12px;
             font-family:Verdana, sans-serif;
@@ -129,17 +138,8 @@
         <p>Simple <a href="#" class="register">Register/Login Form</a>.</p>
         <p>Simple <a href="#" class="modal" title="This is the modal content.">Modal</a>.</p>
 		<div id="modal_content" class="hidden">
-			<h2>Join Our Mailing List</h2>
-			<p><strong>Annoyingly</strong>, forms don't work at the moment</p>
-			<form action="" name="mailing_list_form" method="post">
-				<div class="form_row clearfix">
-					<label for="form_email">Email: <span title="Required Field">*</span></label>
-					<input type="text" name="email" id="form_email" value="" />
-				</div>
-				<div class="form_row submit">
-					<input type="submit" name="form_submit" id="form_submit" class="submit_button" value="Join"/>
-				</div>
-			</form>	
+			<h2>Quick Modal</h2>
+			<p>This content is actually <em>hidden</em> on the page, and loaded in.</p>
 		</div>
 	</body>
 </html>

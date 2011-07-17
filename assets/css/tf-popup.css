@@ -19,14 +19,17 @@
 
 #tf_close_button {
 	color:#fff;
-	font-size:9pt;
-	padding:3px 5px;
+	font-size:10pt;
+	font-family:Verdana, sans-serif;
+	padding:3px 5px 8px;
     text-decoration: none;
 	position:absolute;
     top:-20px;
-    right:5px;
+    right:0px;
 	z-index:9998;
 	display:none;
+	-moz-border-radius:5px;
+	border-radius:5px;
 }
 
 #tf_close_button:hover {
