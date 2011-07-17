@@ -138,7 +138,7 @@
 					renderMarkup();
 					plugin.center();
 					(plugin.settings.callback.onOpen) ? plugin.settings.callback.onOpen(plugin) : null;
-					formCheck(data);
+					formCheck();
 				});
 			}
 			else
@@ -153,8 +153,8 @@
 				}
 				renderMarkup();
 				plugin.center();
+				formCheck();
 				(plugin.settings.callback.onOpen) ? plugin.settings.callback.onOpen(plugin) : null;
-				formCheck(plugin.settings.content);
 			}
 		}
 		
@@ -200,59 +200,51 @@
 			}
 		}
 		
-		var formCheck = function(content)
+		var formCheck = function()
 		{
-			var $content = $(content);
-			if ($content.find("form").length > 0)
-			{
-				var $forms = $content.find("form");
-				$forms.each(function() {
-					
-					var form = $('#' + $(this).attr('id'));
-					form.submit(function(event) {
-						event.preventDefault();
-						var $form = $(form);
-						$content.prepend($loader);
-						plugin.center();
-						var validationURL = getValidationURL($(form).attr('id'));
-						if (validationURL)
-						{
-							$.post(validationURL, $form.serialize(), function(response){
-								// Remove any errors
-								$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
-								$form.find("." +  plugin.settings.errorClass).remove();
-								$loader.remove();
+			var $forms = $popupCont.find("form");
+			$forms.each(function(index, ele) {
+				$(ele).submit(function(e) {
+					e.preventDefault();
+					var $form = $(this);
+					var validationURL = getValidationURL($form.attr('id'));
+					if (validationURL)
+					{
+						$.post(validationURL, $form.serialize(), function(response){
+							// Remove any errors
+							$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
+							$form.find("." +  plugin.settings.errorClass).remove();
+							$loader.remove();
 
-								if(response.status == "error") 
+							if(response.status == "error") 
+							{
+								if (response.errors)
 								{
-									if (response.errors)
-									{
-										$.each(response.errors, function(key){
-											$('#' + key).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
-										});
-									}
-
-									$form.prepend(response.feedback);
-									handleCallback('onError', $(form).attr('id'));
+									$.each(response.errors, function(key){
+										
+										$form.find('#' + key).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
+									});
 								}
-								else
-								{
-									handleCallback('onSuccess', $(form).attr('id'));
-									if (response.feedback)
-										$form.before(response.feedback).remove();
-								}
-								plugin.center();
 
-							}, "json");
-						}
-						else
-						{
-							debug("No validation URL supplied");
-						};
+								$form.prepend(response.feedback);
+								handleCallback('onError', $form.attr('id'));
+							}
+							else
+							{
+								handleCallback('onSuccess', $form.attr('id'));
+								if (response.feedback)
+									$form.before(response.feedback).remove();
+							}
+							plugin.center();
 
-					})
+						}, "json");
+					}
+					else
+					{
+						debug("No validation URL supplied");
+					};
 				})
-			}
+			});
 		}
 
 		plugin.init();
