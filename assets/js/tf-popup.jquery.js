@@ -64,6 +64,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		var plugin = this;
 		
 		plugin.version = '0.9.0';
+		plugin.$element;
 
 		plugin.settings = {}
 
@@ -170,13 +171,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			}
 			else
 			{
-				if (typeof plugin.settings.content == "string")
+				var content;
+				if (typeof plugin.settings.content == "function") 
 				{
-					$popupCont.html(plugin.settings.content);
+					content = plugin.settings.content(plugin);
 				}
 				else
 				{
-					$popupCont.html(plugin.settings.content.html());
+					content = plugin.settings.content;
+				}
+				
+				if (typeof content == "string")
+				{
+					$popupCont.html(content);
+				}
+				else if (typeof content == "object")
+				{
+					$popupCont.html(content.html());
+				}
+				else
+				{
+					debug('Could not parse content of type ' + (typeof content));
 				}
 				renderMarkup();
 				plugin.center();
@@ -296,6 +311,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 				var plugin = new $.TFPopup(this, options);
 
 				$(this).data('TFPopup', plugin);
+				plugin.$element = $(this);
 				
 				$(this).click(function(e) {
 					e.preventDefault();

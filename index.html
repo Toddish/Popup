@@ -4,7 +4,7 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-		<script src="assets/js/tf-popup.jquery.min.js"></script>
+		<script src="assets/js/tf-popup.jquery.js"></script>
 		<link href="assets/css/tf-popup.css" rel="stylesheet" />
 		<script>
 			$(function()
@@ -48,6 +48,16 @@
 					ajaxContent	: false
 				};
 				$(".modal").TFPopup(options3);
+				var options4 = {
+					modal		: true,
+					content		: function(plugin)
+					{
+						return plugin.$element.parents().next('.content');
+					},
+					useMarkup	: true,
+					ajaxContent	: false
+				};
+				$(".modal2").TFPopup(options4);
             });
 		</script>
 		<style>
@@ -141,7 +151,11 @@
 	<body>
 		<p>Simple <a href="#" class="mailing_list">Mailing List</a>.</p>
         <p>Simple <a href="#" class="register">Register/Login Form</a>.</p>
-        <p>Simple <a href="#" class="modal" title="This is the modal content.">Modal</a>.</p>
+        <p>Simple <a href="#" class="modal">Modal</a>.</p>
+        <p>
+			Simple <a href="#" class="modal2">Modal</a>.
+		</p>
+		<div class="content hidden">Content!</div>
 		<div id="modal_content" class="hidden">
 			<h2>Quick Modal</h2>
 			<p>This content is actually <em>hidden</em> on the page, and loaded in.</p>
