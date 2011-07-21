@@ -1,39 +1,55 @@
 #tf_popup_background {
-	display:none;
-	position:fixed;
-	_position:absolute;
-	height:100%;
-	width:100%;
-	top:0;
-	left:0;
-	background:#000000;
-	z-index:9997;
+	display: none;
+	position: fixed;
+	_position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 9997;
 }
 
 #tf_popup_cont {
-	display:none;
-	position:fixed;
-	_position:absolute; /* hack for internet explorer 6*/
-	z-index:9999;
+	display: none;
+	position: fixed;
+	_position: absolute; /* hack for internet explorer 6*/
+	z-index: 9999;
 }
 
+/*
+-----------------------------------------------------------
+Everything below here is stylistic and can be edited
+-----------------------------------------------------------
+*/
+
+#tf_popup_background {
+	background: #000;
+}
+
+
 #tf_close_button {
-	color:#fff;
-	font-size:10pt;
-	font-family:Verdana, sans-serif;
-	padding:3px 5px 8px;
+	color: #fff;
+	font-size: 10pt;
+	font-family: Verdana, sans-serif;
+	padding: 3px 5px 10px;
     text-decoration: none;
-	position:absolute;
-    top:-20px;
-    right:0px;
-	z-index:9998;
-	display:none;
-	-moz-border-radius:5px;
-	border-radius:5px;
+	position: absolute;
+    top: -20px;
+    right: 0px;
+	z-index: 9998;
+	display: none;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }
 
 #tf_close_button:hover {
-	color:#000;
-	background:#fff;
-	text-decoration:none;
+	color: #000;
+	background: #fff;
+	text-decoration: none;
+}
+
+#tf_loader {
+	width: 43px;
+	height: 11px;
+	background:url(../img/ajax-loader.gif) left top no-repeat;
 }

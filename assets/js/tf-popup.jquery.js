@@ -1,4 +1,6 @@
 /*
+ * TF Popup
+ * v0.9.0
  
 Copyright (C) 2011  Todd Francis
 
@@ -27,24 +29,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			popupWidth					: null,
 			popupHeight					: null,
 			backgroundOpacity			: 0.7,
-			popupID						: "tf_popup_cont",
-			backgroundID				: "tf_popup_background",
-			loader						: '<img src="assets/img/ajax_loader.gif" />',
-			content						: "",
-			validationURL				: "",
+			popupID						: 'tf_popup_cont',
+			backgroundID				: 'tf_popup_background',
+			loader						: {
+				content					: '',
+				ID						: 'tf_loader'
+			},
+			content						: '',
+			validationURL				: '',
 			callback					: {
 				onOpen		: null,
 				onClose		: null,
 				onError		: null,
-				onSuccess	: null
+				onSuccess	: null,
+				onSubmit	: null
 			},
-			inputRowClass				: "form_row",
-			invalidRowClass				: "invalid_row",
-			errorClass					: "error",
+			inputRowClass				: 'form_row',
+			invalidRowClass				: 'invalid_row',
+			errorClass					: 'error',
 			closeButton					: {
 				content		: 'Close',
 				hidden		: false,
-				ID			: "tf_close_button"
+				ID			: 'tf_close_button'
 			},
 			hideFlash		: false,
 			useMarkup		: false,
@@ -57,11 +63,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 		var plugin = this;
 		
-		plugin.version = "0.9.0";
+		plugin.version = '0.9.0';
 
 		plugin.settings = {}
 
-		var $element = $(element);
 		var $backgroundDiv, $popupCont, $loader, $closeButton;
 
 		plugin.init = function() {
@@ -104,7 +109,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			}, "fast");
 			
 			// Load in the loader
-			$loader = $(plugin.settings.loader);
+			$loader = $('<div id="' + plugin.settings.loader.ID + '">' + plugin.settings.loader.content + '</div>');
 			$popupCont.html($loader);
 			plugin.center();
 			if (plugin.settings.content)
@@ -229,6 +234,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 				$(ele).submit(function(e) {
 					e.preventDefault();
 					var $form = $(this);
+					handleCallback('onSubmit', $form.attr(id));
 					var validationURL = getValidationURL($form.attr('id'));
 					if (validationURL)
 					{

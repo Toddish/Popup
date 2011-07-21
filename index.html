@@ -11,7 +11,12 @@
             {
                 var options = {
                     content					: "_examples/mailing-list.form.php",
-                    validationURL			: "_examples/mailing-list.validation.php"
+                    validationURL			: "_examples/mailing-list.validation.php",
+					callback				: {
+						onSubmit			: function(plugin, formData) {
+							console.log(plugin, formData);
+						}
+					}			
                 };
                 $(".mailing_list").TFPopup(options);
                 var options2 = {
