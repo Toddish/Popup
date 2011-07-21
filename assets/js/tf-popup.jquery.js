@@ -249,43 +249,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 				$(ele).submit(function(e) {
 					e.preventDefault();
 					var $form = $(this);
-					handleCallback('onSubmit', $form.attr(id));
-					var validationURL = getValidationURL($form.attr('id'));
-					if (validationURL)
+					if (handleCallback('onSubmit', $form.attr('id')) !== false)
 					{
-						$.post(validationURL, $form.serialize(), function(response){
-							// Remove any errors
-							$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
-							$form.find("." +  plugin.settings.errorClass).remove();
-							$loader.remove();
+						var validationURL = getValidationURL($form.attr('id'));
+						if (validationURL)
+						{
+							$.post(validationURL, $form.serialize(), function(response){
+								// Remove any errors
+								$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
+								$form.find("." +  plugin.settings.errorClass).remove();
+								$loader.remove();
 
-							if(response.status == "error") 
-							{
-								if (response.errors)
+								if(response.status == "error") 
 								{
-									$.each(response.errors, function(key){
-										
-										$form.find('#' + key).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
-									});
+									if (response.errors)
+									{
+										$.each(response.errors, function(){
+											$form.find('#' + this).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
+										});
+									}
+
+									$form.prepend(response.feedback);
+									handleCallback('onError', $form.attr('id'));
 								}
+								else
+								{
+									handleCallback('onSuccess', $form.attr('id'));
+									if (response.feedback)
+										$form.before(response.feedback).remove();
+								}
+								plugin.center();
 
-								$form.prepend(response.feedback);
-								handleCallback('onError', $form.attr('id'));
-							}
-							else
-							{
-								handleCallback('onSuccess', $form.attr('id'));
-								if (response.feedback)
-									$form.before(response.feedback).remove();
-							}
-							plugin.center();
-
-						}, "json");
+							}, "json");
+						}
+						else
+						{
+							debug("No validation URL supplied");
+						};
 					}
-					else
-					{
-						debug("No validation URL supplied");
-					};
 				})
 			});
 		}

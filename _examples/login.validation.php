@@ -15,7 +15,7 @@ if ($_POST) {
 		
 		$data = array(
 			'status'	=> "error",
-			'errors'	=> $errors,
+			'errors'	=> array_keys($errors),
 			'feedback'	=> "<p class=\"error\">".current($errors)."</p>"
 		);
 		
