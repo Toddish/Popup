@@ -29,8 +29,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			popupWidth					: null,
 			popupHeight					: null,
 			backgroundOpacity			: 0.7,
-			popupID						: 'tf_popup_cont',
-			backgroundID				: 'tf_popup_background',
 			loader						: {
 				content					: '',
 				ID						: 'tf_loader'
@@ -43,9 +41,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 				onSuccess	: null,
 				onSubmit	: null
 			},
-			inputRowClass				: 'form_row',
-			invalidRowClass				: 'invalid_row',
-			errorClass					: 'error',
 			closeButton					: {
 				content		: 'Close',
 				hidden		: false,
@@ -55,9 +50,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			useMarkup		: false,
 			markup			: {
 				top				: '<div class="popup">',
-				bottom			: '</div>'
+				bottom			: '</div>',
+				inputRowClass	: 'form_row',
+				invalidRowClass	: 'invalid_row',
+				errorClass		: 'error',
+				popupID			: 'tf_popup_cont',
+				backgroundID	: 'tf_popup_background'
 			},
-			ajaxContent			: true
+			ajaxContent			: true,
+			ajaxSubmit			: true
 		};
 
 		var plugin = this;
@@ -77,12 +78,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		
 		plugin.open = function() {
 			// Create Items
-			$backgroundDiv = $('<div id="' + plugin.settings.backgroundID + '" />')
+			$backgroundDiv = $('<div id="' + plugin.settings.markup.backgroundID + '" />')
 			.appendTo($(document.body))
 			.css({
 				"opacity" : plugin.settings.backgroundOpacity
 			});
-			$popupCont = $('<div id="' + plugin.settings.popupID + '" />')
+			$popupCont = $('<div id="' + plugin.settings.markup.popupID + '" />')
 			.appendTo($(document.body));
 
 			//Background click to close
@@ -224,9 +225,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		{
 			if (plugin.settings.callback[func]) {
 				if (plugin.settings.callback[func][formID]) {
-					plugin.settings.callback[func][formID](plugin);
+					 return plugin.settings.callback[func][formID](plugin);
 				} else {
-					plugin.settings.callback[func](plugin);
+					 return plugin.settings.callback[func](plugin);
 				}
 			}
 		}
@@ -236,45 +237,57 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			var $forms = $popupCont.find("form");
 			$forms.each(function(index, ele) {
 				$(ele).submit(function(e) {
-					e.preventDefault();
 					var $form = $(this);
 					if (handleCallback('onSubmit', $form.attr('id')) !== false)
 					{
-						var validationURL = $form.attr('action');
-						if (validationURL)
+						if (plugin.settings.ajaxSubmit)
 						{
-							$.post(validationURL, $form.serialize(), function(response){
-								// Remove any errors
-								$form.find("." + plugin.settings.inputRowClass).removeClass(plugin.settings.invalidRowClass);
-								$form.find("." +  plugin.settings.errorClass).remove();
-								$loader.remove();
+							e.preventDefault();
+							var validationURL = $form.attr('action');
+							if (validationURL)
+							{
+								$.post(validationURL, $form.serialize(), function(response){
+									// Remove any errors
+									$form.find("." + plugin.settings.markup.inputRowClass).removeClass(plugin.settings.markup.invalidRowClass);
+									$form.find("." +  plugin.settings.markup.errorClass).remove();
+									$loader.remove();
 
-								if(response.status == "error") 
-								{
-									if (response.errors)
+									if(response.status == "error") 
 									{
-										$.each(response.errors, function(){
-											$form.find('#' + this).parents("." + plugin.settings.inputRowClass).addClass(plugin.settings.invalidRowClass);
-										});
+										if (response.errors)
+										{
+											$.each(response.errors, function(){
+												$form.find('#' + this).parents("." + plugin.settings.markup.inputRowClass).addClass(plugin.settings.markup.invalidRowClass);
+											});
+										}
+
+										$form.prepend(response.feedback);
+										handleCallback('onError', $form.attr('id'));
 									}
+									else
+									{
+										handleCallback('onSuccess', $form.attr('id'));
+										if (response.feedback)
+											$form.before(response.feedback).remove();
+									}
+									plugin.center();
 
-									$form.prepend(response.feedback);
-									handleCallback('onError', $form.attr('id'));
-								}
-								else
-								{
-									handleCallback('onSuccess', $form.attr('id'));
-									if (response.feedback)
-										$form.before(response.feedback).remove();
-								}
-								plugin.center();
-
-							}, "json");
+								}, "json");
+							}
+							else
+							{
+								debug("No validation URL supplied");
+							}
 						}
 						else
 						{
-							debug("No validation URL supplied");
-						};
+							handleCallback('onSuccess', $form.attr('id'));
+						}
+					}
+					else
+					{
+						e.preventDefault();
+						handleCallback('onError', $form.attr('id'));
 					}
 				})
 			});

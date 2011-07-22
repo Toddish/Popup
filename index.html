@@ -10,16 +10,32 @@
 			$(function()
             {
                 var options = {
-                    content					: "_examples/mailing-list.form.php",
-                    validationURL			: "_examples/mailing-list.validation.php"			
+                    content					: "_examples/mailing-list.form.php"		
                 };
                 $("#mailing_list_link").TFPopup(options);
+				
+				
                 var options2 = {
+                    content					: "_examples/mailing-list-javascript.form.php",
+					ajaxSubmit				: false,
+					callback				: {
+						onSubmit			: function(plugin) {
+							if ($('#form_email').val() == "")
+							{
+								alert('please enter an email');
+								return false;
+							}
+						},
+						onSuccess			: function(plugin) {
+							alert('This will now submit normally');
+						}
+					}
+                };
+                $("#mailing_list_javascript_link").TFPopup(options2);
+				
+				
+                var options3 = {
                     content					: "_examples/register.form.php",
-                    validationURL			: {
-                        register_form           : "_examples/register.validation.php",
-                        login_form              : "_examples/login.validation.php"
-                    },
                     callback                : {
                         onSuccess               : {
                             register_form           : function() {
@@ -35,14 +51,33 @@
                         }
                     }
                 };
-                $("#register_link").TFPopup(options2);
-				var options3 = {
+                $("#register_link").TFPopup(options3);
+				
+				
+				var options4 = {
 					modal		: true,
 					content		: $('#modal_content'),
 					useMarkup	: true,
 					ajaxContent	: false
 				};
-				$("#modal_link").TFPopup(options3);
+				$("#modal_link").TFPopup(options4);
+				
+				
+				var options5 = {
+					modal		: true,
+					content		: $('#modal_content_replace'),
+					useMarkup	: true,
+					ajaxContent	: false
+				};
+				$("#modal_link_replace").TFPopup(options5);
+				
+				$('#replace_content').live('click', function() {
+					$("#modal_link_replace").data('TFPopup').loadContent('<p>This is the new content</p><p><a href="#" id="close_popup">Close</a></p>');
+				})
+				
+				$('#close_popup').live('click', function() {
+					$("#modal_link_replace").data('TFPopup').close();
+				})
             });
 		</script>
 		<style>
@@ -134,12 +169,34 @@
         </style>
 	</head>
 	<body>
-		<p>Simple <a href="#" id="mailing_list_link">Mailing List</a>.</p>
-        <p>Simple <a href="#" id="register_link">Register/Login Form</a>.</p>
-        <p>Simple <a href="#" id="modal_link">Modal</a>.</p>
+		<h1>Examples</h1>
+		<p>To view the code for the examples on this page, simple view the source.</p>
+		
+		<h2>Simple mailing list</h2>
+		<p>This is the most basic example, simply passing the content to the popup.</p>
+		<p>View the simple <a href="#" id="mailing_list_link">mailing list demo</a>.</p>
+		
+		<h2>Mailing List with JavaScript Validation</h2>
+		<p>This example prevents the usual AJAX submission and does its own JavaScript error handling, submitting the form normally on success.</p>
+		<p>View the <a href="#" id="mailing_list_javascript_link">mailing list with JavaScript validation demo</a>.</p>
+		
+		<h2>Register/Login Form</h2>
+		<p>This demo shows how you can have two different forms on the page, each with their own callback functions.</p>
+        <p>View the <a href="#" id="register_link">Register/Login demo</a>.</p>
+		
+		<h2>Simple Modal</h2>
+		<p>This modal example shows how to create a modal lightbox that loads in content from the page, rather than via AJAX.</p>
+        <p>View the <a href="#" id="modal_link">simple modal demo</a>.</p>
 		<div id="modal_content" class="hidden">
 			<h2>Quick Modal</h2>
 			<p>This content is actually <em>hidden</em> on the page, and loaded in.</p>
+		</div>
+		
+		<h2>Simple Modal with Content Replace</h2>
+		<p>This modal example shows how to replace the content in the popup on the fly. Note that you may need to apply the click event via the "Live" handler.</p>
+        <p>View the <a href="#" id="modal_link_replace">modal with replacement content demo</a>.</p>
+		<div id="modal_content_replace" class="hidden">
+			<p>Don't like this content? <a href="#" id="replace_content">Replace it!</a>.</p>
 		</div>
 	</body>
 </html>
