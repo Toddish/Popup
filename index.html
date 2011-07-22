@@ -11,14 +11,9 @@
             {
                 var options = {
                     content					: "_examples/mailing-list.form.php",
-                    validationURL			: "_examples/mailing-list.validation.php",
-					callback				: {
-						onSubmit			: function(plugin, formData) {
-							console.log(plugin, formData);
-						}
-					}			
+                    validationURL			: "_examples/mailing-list.validation.php"			
                 };
-                $(".mailing_list").TFPopup(options);
+                $("#mailing_list_link").TFPopup(options);
                 var options2 = {
                     content					: "_examples/register.form.php",
                     validationURL			: {
@@ -40,24 +35,14 @@
                         }
                     }
                 };
-                $(".register").TFPopup(options2);
+                $("#register_link").TFPopup(options2);
 				var options3 = {
 					modal		: true,
 					content		: $('#modal_content'),
 					useMarkup	: true,
 					ajaxContent	: false
 				};
-				$(".modal").TFPopup(options3);
-				var options4 = {
-					modal		: true,
-					content		: function(plugin)
-					{
-						return plugin.$element.parents().next('.content');
-					},
-					useMarkup	: true,
-					ajaxContent	: false
-				};
-				$(".modal2").TFPopup(options4);
+				$("#modal_link").TFPopup(options3);
             });
 		</script>
 		<style>
@@ -149,13 +134,9 @@
         </style>
 	</head>
 	<body>
-		<p>Simple <a href="#" class="mailing_list">Mailing List</a>.</p>
-        <p>Simple <a href="#" class="register">Register/Login Form</a>.</p>
-        <p>Simple <a href="#" class="modal">Modal</a>.</p>
-        <p>
-			Simple <a href="#" class="modal2">Modal</a>.
-		</p>
-		<div class="content hidden">Content!</div>
+		<p>Simple <a href="#" id="mailing_list_link">Mailing List</a>.</p>
+        <p>Simple <a href="#" id="register_link">Register/Login Form</a>.</p>
+        <p>Simple <a href="#" id="modal_link">Modal</a>.</p>
 		<div id="modal_content" class="hidden">
 			<h2>Quick Modal</h2>
 			<p>This content is actually <em>hidden</em> on the page, and loaded in.</p>

@@ -36,7 +36,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 				ID						: 'tf_loader'
 			},
 			content						: '',
-			validationURL				: '',
 			callback					: {
 				onOpen		: null,
 				onClose		: null,
@@ -157,9 +156,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			});
 		}
 		
-		plugin.loadContent = function(content) 
+		plugin.loadContent = function(content, overrideAjax) 
 		{
-			if (plugin.settings.ajaxContent)
+			if (plugin.settings.ajaxContent && overrideAjax !== true)
 			{
 				$popupCont.load(content, function(data)
 				{
@@ -171,27 +170,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			}
 			else
 			{
-				var content;
-				if (typeof plugin.settings.content == "function") 
+				var finalContent;
+				if (typeof content == "function") 
 				{
-					content = plugin.settings.content(plugin);
+					finalContent = content(plugin);
 				}
 				else
 				{
-					content = plugin.settings.content;
+					finalContent = content;
 				}
 				
-				if (typeof content == "string")
+				if (typeof finalContent == "string")
 				{
-					$popupCont.html(content);
+					$popupCont.html(finalContent);
 				}
-				else if (typeof content == "object")
+				else if (typeof finalContent == "object")
 				{
-					$popupCont.html(content.html());
+					$popupCont.html(finalContent.html());
 				}
 				else
 				{
-					debug('Could not parse content of type ' + (typeof content));
+					debug('Could not parse content of type ' + (typeof finalContent));
 				}
 				renderMarkup();
 				plugin.center();
@@ -221,16 +220,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			$closeButton.fadeIn("fast");
 		}
 		
-		var getValidationURL = function(formID)
-		{
-			if (typeof(plugin.settings.validationURL) == 'object' && plugin.settings.validationURL[formID]) {
-				return plugin.settings.validationURL[formID];
-			} else if (typeof(plugin.settings.validationURL) == "string") {
-				return plugin.settings.validationURL;
-			}
-			return "";
-		}
-		
 		var handleCallback = function (func, formID)
 		{
 			if (plugin.settings.callback[func]) {
@@ -251,7 +240,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 					var $form = $(this);
 					if (handleCallback('onSubmit', $form.attr('id')) !== false)
 					{
-						var validationURL = getValidationURL($form.attr('id'));
+						var validationURL = $form.attr('action');
 						if (validationURL)
 						{
 							$.post(validationURL, $form.serialize(), function(response){
