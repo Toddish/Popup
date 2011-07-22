@@ -53,3 +53,13 @@ Everything below here is stylistic and can be edited
 	height: 11px;
 	background:url(../img/ajax-loader.gif) left top no-repeat;
 }
+
+.popup {
+	width:300px;
+	background:#fff;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px; 
+	padding:20px;
+	overflow:hidden;
+}

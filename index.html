@@ -10,7 +10,14 @@
 			$(function()
             {
                 var options = {
-                    content					: "_examples/mailing-list.form.php"		
+                    content					: "_examples/mailing-list.form.php",
+					callback				: {
+						onSuccess			: function(plugin) {
+							setTimeout(function() {
+								plugin.close();
+							}, 2000);
+						}
+					}
                 };
                 $("#mailing_list_link").TFPopup(options);
 				
@@ -96,15 +103,6 @@
         p {
             font-size:12px;
             font-family:Verdana, sans-serif;
-        }
-        .popup {
-            width:300px;
-            background:#fff;
-            -moz-border-radius:5px;
-            -webkit-border-radius:5px;
-            border-radius:5px; 
-            padding:20px;
-            overflow:hidden;
         }
         .popup.large {
             width:640px;
