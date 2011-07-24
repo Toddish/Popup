@@ -64,7 +64,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		var plugin = this;
 		
 		plugin.version = '0.9.0';
-		plugin.$element;
 
 		plugin.settings = {}
 
