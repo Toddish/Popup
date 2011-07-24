@@ -78,11 +78,13 @@
 				};
 				$("#modal_link_replace").TFPopup(options5);
 				
-				$('#replace_content').live('click', function() {
+				$('#replace_content').live('click', function(e) {
+					e.preventDefault();
 					$("#modal_link_replace").data('TFPopup').loadContent('<p>This is the new content</p><p><a href="#" id="close_popup">Close</a></p>');
 				})
 				
-				$('#close_popup').live('click', function() {
+				$('#close_popup').live('click', function(e) {
+					e.preventDefault();
 					$("#modal_link_replace").data('TFPopup').close();
 				})
             });
@@ -171,7 +173,7 @@
 	</head>
 	<body>
 		<h1>Examples</h1>
-		<p>To view the code for the examples on this page, simple view the source.</p>
+		<p>To view the code for the examples on this page, simply view the source.</p>
 		
 		<h2>Simple mailing list</h2>
 		<p>This is the most basic example, simply passing the content to the popup.</p>
