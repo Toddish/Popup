@@ -1,0 +1,1 @@
+<p>The appended var is <strong><?php echo htmlspecialchars(@$_GET['var'])?></strong>.</p>

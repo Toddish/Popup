@@ -87,6 +87,11 @@
 					e.preventDefault();
 					$("#modal_link_replace").data('TFPopup').close();
 				})
+				
+				$('#append_link').TFPopup({
+					content			: "_examples/append.php",
+					useMarkup		: true
+				});
             });
 		</script>
 		<style>
@@ -201,5 +206,9 @@
 		<div id="modal_content_replace" class="hidden">
 			<p>Don't like this content? <a href="#" id="replace_content">Replace it!</a>.</p>
 		</div>
+		
+		<h2>Append data to the end of the content URL</h2>
+		<p>Easily append data to the end of the content URL. This is especially useful if you want to pass custom data across to each popup, without targeting each popup individually.</p>
+        <p>View the <a href="#" id="append_link" data-tf_append="var=Test Var">modal with replacement content demo</a>.</p>
 	</body>
 </html>

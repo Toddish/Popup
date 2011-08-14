@@ -1,6 +1,6 @@
 /*
  * TF Popup
- * v0.9.0
+ * v0.9.1
  
 Copyright (C) 2011  Todd Francis
 
@@ -63,7 +63,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 		var plugin = this;
 		
-		plugin.version = '0.9.0';
+		plugin.version = '0.9.1';
 
 		plugin.settings = {}
 
@@ -158,10 +158,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		
 		plugin.loadContent = function(content, overrideAjax) 
 		{
+			var finalContent;
 			if (plugin.settings.ajaxContent && overrideAjax !== true)
 			{
-				$popupCont.load(content, function(data)
+				finalContent = content;
+				var append = plugin.$element.attr('data-tf_append');
+				if (append)
 				{
+					finalContent = finalContent + (content.indexOf('?') > -1 ? '&' + append : '?' + append);
+				}
+				$.get(finalContent, function(data, status, xhr)
+				{
+					if (status == "error")
+					{
+						$popupCont.html('<p>Content could not be loaded: ' + xhr.statusText + '</p>');
+					}
+					else
+					{
+						$popupCont.html(data);
+					}
 					renderMarkup();
 					plugin.center();
 					(plugin.settings.callback.onOpen) ? plugin.settings.callback.onOpen(plugin) : null;
@@ -170,7 +185,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			}
 			else
 			{
-				var finalContent;
 				if (typeof content == "function") 
 				{
 					finalContent = content(plugin);
