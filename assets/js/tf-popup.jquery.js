@@ -1,6 +1,6 @@
 /*
  * TF Popup
- * v0.9.1
+ * v1.0.0
  
 Copyright (C) 2011  Todd Francis
 
@@ -55,7 +55,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 				invalidRowClass	: 'invalid_row',
 				errorClass		: 'error',
 				popupID			: 'tf_popup_cont',
-				backgroundID	: 'tf_popup_background'
+				backgroundID	: 'tf_popup_background',
+				activeClass		: 'tf_active'
 			},
 			ajaxContent			: true,
 			ajaxSubmit			: true
@@ -63,7 +64,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 		var plugin = this;
 		
-		plugin.version = '0.9.1';
+		plugin.version = '1.0.0';
 
 		plugin.settings = {}
 
@@ -84,7 +85,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 			});
 			$popupCont = $('<div id="' + plugin.settings.markup.popupID + '" />')
 			.appendTo($(document.body));
-
+			plugin.$element.addClass(plugin.settings.markup.activeClass);
+			
 			//Background click to close
 			$backgroundDiv.click(function(e)
 			{
@@ -124,6 +126,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 		}
 		
 		plugin.close = function() {
+			plugin.$element.removeClass(plugin.settings.markup.activeClass);
 			(plugin.settings.hideFlash) ? $('object, embed').css('visibility', "visible") : null;
 			$backgroundDiv.fadeOut("fast", function() {
 				$backgroundDiv.remove();
