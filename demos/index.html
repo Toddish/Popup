@@ -1,0 +1,415 @@
+<!doctype html>
+<html>
+<head>
+	<title>Popup.js demos</title>
+	<link href="../assets/css/popup.css" rel="stylesheet">
+	<style>
+		/* Some basic style resets to make the page look slightly nicer */
+		h1, h2 {
+			font-family: Arial, sans-serif;
+			margin: 10px 0;
+		}
+
+		p, a {
+			font-family: Verdana, sans-serif;
+			font-size: 13px;
+		}
+
+		/* Gallery */
+		[href="#next"] {
+			float: right;
+		}
+
+		[href="#prev"] {
+			float: left;
+		}
+
+		[href="#next"], [href="#prev"] {
+			padding-top: 10px;
+		}
+
+		div.popup {
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<h1>Popup.js Demos</h1>
+	<p>A selection of demos, view the source code for the full code.</p>
+
+	<h2>Basic usage</h2>
+	<a href="http://placehold.it/250x250.png" class="default_popup">Default image</a>
+	<br>
+
+	<a href="http://toddish.co.uk" class="default_popup">Default External Site</a>
+	<br>
+
+	<a href="#inline" class="default_popup">Default Inline</a>
+	<br>
+
+	<div id="inline" style="display:none">
+
+		<p><em>This</em> is some <strong>content</strong>.</p>
+
+	</div>
+
+	<a href="ajax/content.html" class="default_popup">Default AJAX</a>
+	<br>
+
+	<a href="http://toddish.co.uk?pw=500&amp;ph=300" class="default_popup">External Site with dimension params</a>
+	<br>
+
+	<h2>Intermediate Demos</h2>
+
+	<a href="#" class="function_popup" title="The title is my content.">Function</a>
+	<br>
+
+	<a href="#" class="jquery_popup">jQuery</a>
+	<br>
+
+	<a href="#" class="html_popup">HTML</a>
+	<br>
+
+	<a href="http://www.youtube.com/embed/dQw4w9WgXcQ?pt=youtube" class="youtube_popup">Custom type 'youtube'</a>
+	<br>
+
+	<a href="http://placehold.it/175x230.png" class="preloader_popup">Different preloader</a>
+	<br>
+
+	<h2>Advanced Demos</h2>
+
+	<a href="http://placehold.it/300x150.png" class="animated_popup">Extending animations</a>
+	<br>
+
+	<a href="#replace1" class="default_popup">Replacing content</a>
+	<br>
+
+	<div id="replace1" style="display:none">
+
+		<p>I fear I'm about to be replaced&hellip;</p>
+		<a href="#replace2" class="default_popup">Replace content</a>
+
+	</div>
+
+	<div id="replace2" style="display:none">
+
+		<h1>Replaced!</h1>
+
+	</div>
+
+	<a href="http://placehold.it/250x250.png" class="callback_popup">Callbacks - check console.log!</a>
+	<br>
+
+	<h2>Error Handling</h2>
+
+	<a href="#" class="error_popup">Default Error</a>
+	<br>
+
+	<a href="fail.html" class="error_popup">AJAX Error</a>
+	<br>
+
+	<a href="http://test.com/fail.png" class="error_popup">Image Error</a>
+	<br>
+
+	<h2>Gallery</h2>
+
+	<p>Popup.js was intentionally created without a built-in gallery, but flexible enough to be extended and create one if need be.</p>
+
+	<p>Here is an example gallery. (Which, when minified and gzipped, is still only ~2.15kb <strong>WITH</strong> popup.js!)</p>
+
+	<a href="http://placehold.it/350x150.png" class="popup_gallery">Image 1</a><br>
+	<a href="ajax/content.html" class="popup_gallery">AJAX</a><br>
+	<a href="http://placehold.it/400x200.png" class="popup_gallery">Image 2</a><br>
+	<a href="http://toddish.co.uk?pw=600&amp;ph=300" class="popup_gallery">External Site</a><br>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+	<script src="../assets/js/popup.js"></script>
+	<script>
+		$(function(){
+
+			/*-------------------------------
+
+				GENERAL EXAMPLES
+
+			-------------------------------*/
+
+			// Default usage
+			$('.default_popup').popup();
+
+			// Function for content
+			$('.function_popup').popup({
+				content		: function(){
+					return '<p>'+$(this.ele).attr('title')+'</p>';
+				}
+			});
+
+			// jQuery for content
+			$('.jquery_popup').popup({
+				content		: $('#inline')
+			});
+
+			// HTML for content
+			$('.html_popup').popup({
+				content		: '<h1>This is some HTML</h1>',
+				type		: 'html'
+			});
+
+			// Custom YouTube content
+			$('.youtube_popup').popup({
+				types		: {
+					youtube			: function(content, callback){
+
+						content = '<iframe width="420" height="315" src="'+content+'" frameborder="0" allowfullscreen></iframe>';
+
+						// Don't forget to call the callback!
+						callback.call(this, content);
+
+					}
+				},
+				width				: 420,
+				height				: 315
+			});
+
+			// Animated popup
+			$('.animated_popup').popup({
+				show				: function($popup, $back){
+
+					var plugin = this,
+						center = plugin.getCenter();
+
+					$popup
+						.css({
+							top     : - $popup.children().outerHeight(),
+							left    : center.left,
+							opacity	: 1
+						})
+						.animate({top : center.top}, 500, 'easeOutBack', function(){
+							// Call the open callback
+							plugin.o.afterOpen.call(plugin);
+						});
+
+				}
+			});
+
+			// Call ALL the callbacks
+			$('.callback_popup').popup({
+				beforeOpen          : function(type){
+					console.log('beforeOpen -', type);
+				},
+				afterOpen           : function(){
+					console.log('afterOpen');
+				},
+				beforeClose         : function(){
+					console.log('beforeClose');
+				},
+				afterClose          : function(){
+					console.log('afterClose');
+				}
+			});
+
+			// Different preloader
+			$('.preloader_popup').popup({
+				preloaderContent	: '<img src="assets/images/preloader.gif" class="preloader">'
+			});
+
+			// Error popup
+			$('.error_popup').popup({
+				error		: function(content, type){
+
+					// Just call open again, it'll replace the content
+					this.open('<h1>ERROR!</h1><p>Content "'+content+'" of type "'+type+'" could not be loaded.</p>', 'html');
+				}
+			});
+
+		});
+
+		/*---------------------
+
+			JQUERY EASING
+
+		*/
+
+		$.extend($.easing, {
+			easeOutBack: function (x, t, b, c, d, s) {
+				if (s == undefined) s = 1.70158;
+				return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+			},
+			easeInBack: function (x, t, b, c, d, s) {
+				if (s == undefined) s = 1.70158;
+				return c*(t/=d)*t*((s+1)*t - s) + b;
+			}
+		});
+
+		/*-------------------------------
+
+			GALLERY SPECIFIC CODE
+
+		-------------------------------*/
+
+		/*---------------------
+
+			SETTINGS
+
+		*/
+
+		var gallerySettings = {
+				markup		: '' +
+					'<div class="popup">' +
+						'<div class="popup_wrap">' +
+							'<div class="popup_content"/>' +
+						'</div>' +
+						'<a href="#next">Next</a>' +
+						'<a href="#prev">Previous</a>' +
+					'</div>',
+				// This is a custom variable
+				gallery		: '.popup_gallery',
+				replaced	: function($popup, $back){
+
+					var plugin = this,
+						$wrap = $('.popup_wrap', $popup);
+
+					// Animate the popup to new size
+					$wrap.animate({
+						width 	: $wrap.children().children().outerWidth(true),
+						height 	: $wrap.children().children().outerHeight(true)
+					}, {
+						duration	: 500,
+						easing		: 'easeOutBack',
+						step		: function(){
+
+							// Need to center the poup on each step
+							$popup
+								.css({
+									top		: plugin.getCenter().top,
+									left	: plugin.getCenter().left
+								});
+
+						},
+						complete	: function(){
+
+							// Fade in!
+							$wrap
+								.children()
+								.animate({opacity : 1}, plugin.o.speed, function(){
+									plugin.center();
+									plugin.o.afterOpen.call(plugin);
+								});
+
+						}
+					});
+				},
+				show		: function($popup, $back){
+
+					var plugin = this,
+						$wrap = $('.popup_wrap', $popup);
+
+					// Center the plugin
+					plugin.center();
+
+					// Default fade in
+					$popup
+						.animate({opacity : 1}, plugin.o.speed, function(){
+							plugin.o.afterOpen.call(plugin);
+						});
+
+					// Set the inline styles as we animate later
+					$wrap.css({
+						width 	: $wrap.outerWidth(true),
+						height 	: $wrap.outerHeight(true)
+					});
+
+				},
+				afterClose		: function(){
+					this.currentIndex = undefined;
+				}
+
+			};
+
+		$(function(){
+
+			/*---------------------
+
+				POPUP
+
+			*/
+
+			$('.popup_gallery').popup(gallerySettings);
+
+			/*---------------------
+
+				NEXT & PREVIOUS LINKS
+
+			*/
+
+			$(document).on('click', '[href="#next"], [href="#prev"]', function(e){
+
+				e.preventDefault();
+
+				var $current = $('.popup_active'),
+					popup = $current.data('popup'),
+					$items = $(popup.o.gallery);
+
+				// If this is the first time
+				// and we don't have a currentIndex set
+				if( popup.currentIndex === undefined ){
+
+					popup.currentIndex = $items.index($current);
+
+				}
+
+				// Fade the current item out
+				$('.'+popup.o.contentClass)
+					.animate({opacity : 0}, 'fast', function(){
+
+						// Get the next index
+						var newIndex = $(e.target).attr('href') === '#next'
+							? popup.currentIndex + 1
+							: popup.currentIndex - 1;
+
+						// Make sure the index is valid
+						if( newIndex > $items.length -1 ){
+
+							popup.currentIndex = 0;
+
+						}else if( newIndex < 0 ){
+
+							popup.currentIndex = $items.length - 1;
+
+						}else{
+
+							popup.currentIndex = newIndex;
+
+						}
+
+						// Get the new current link
+						$current = $($items[popup.currentIndex]);
+
+						// Load the content
+						popup.open($current.attr('href'), undefined, $current[0]);
+
+					});
+
+			});
+
+		});
+
+		/*---------------------
+
+			JQUERY EASING
+
+		*/
+
+		$.extend($.easing, {
+			easeOutBack: function (x, t, b, c, d, s) {
+				if (s == undefined) s = 1.70158;
+				return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+			},
+			easeInBack: function (x, t, b, c, d, s) {
+				if (s == undefined) s = 1.70158;
+				return c*(t/=d)*t*((s+1)*t - s) + b;
+			}
+		});
+
+	</script>
+</body>
+</html>

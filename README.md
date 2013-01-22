@@ -1,12 +1,61 @@
-# Description
+# Popup.js
 
-A versatile jQuery popup plugin. Designed to be used by developers, it has a wide range of uses and is very easy to implement.
+---
 
-## Examples/Demo
+A barebones, flexible jQuery popup plugin. Designed for developers, it's simple to use but very powerful.
 
-To see some examples/demos, please visit [http://scripts.toddish.co.uk/tf-popup/examples](http://scripts.toddish.co.uk/tf-popup/examples "TF Popup Examples").
-These are also included with the source.
+---
+
+## Features
+
+* Barebones - it only has what it absolutely needs, the rest is up to you
+* Automatically detects images, external sites, inline content and ajax content
+* It can also cope with raw HTML, functions, jQuery...
+* Plus custom content types. (Think YouTube, Vimeo etc.)
+* Lightweight - ~1.7kb minified and gzipped
+* Made to be customized - callbacks and options aplenty
+* Fully styled with CSS, make it look however you want
+* Handles loading errors intelligently
+
+---
+
+## Installation
+
+Place `/assets/css/popup.css` in `/your/css/folder/`.
+
+Add this just before your closing `head` tag:
+
+```html
+<link rel="styesheet" src="/your/css/folder/popup.css"></script>
+```
+
+Then, place `/assets/js/popup.min.js` in `/your/js/folder/`.
+
+Add this just before your closing `body` tag, after you've included jQuery:
+
+```html
+<script src="/your/js/folder/popup.min.js"></script>
+```
+
+---
+
+## Usage
+
+Set up your html:
+
+```html
+<a href="http://placehold.it/350x175.png" class="popup">Popup link</a>
+```
+
+Call the plugin:
+
+```javascript
+var options = {};
+$('a.popup').popup(options);
+```
+
+---
 
 ## Documentation
 
-[http://scripts.toddish.co.uk/tf-popup/docs](http://scripts.toddish.co.uk/tf-popup/docs "TF Popup Documentation").
+For full documentation, have a look at [http://docs.toddish.co.uk/popup](http://docs.toddish.co.uk/popup).
