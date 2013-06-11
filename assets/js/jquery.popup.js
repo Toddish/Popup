@@ -5,7 +5,7 @@
 	Simple Popup plugin for jQuery
 
 	@author Todd Francis
-	@version 2.0.1
+	@version 2.1.0
 
 -------------------------------*/
 
@@ -29,7 +29,7 @@
 
 				e.preventDefault();
 
-				popup.open(this.getAttribute('href'), undefined, this);
+				popup.open($(this).attr('href'), undefined, this);
 
 			});
 
@@ -54,36 +54,38 @@
 			defaults = {
 
 				// Markup
-				backClass           : 'popup_back',
-				backOpacity         : 0.7,
-				containerClass      : 'popup_cont',
-				closeContent        : '<div class="popup_close">&times;</div>',
-				markup              : '<div class="popup"><div class="popup_content"/></div>',
-				contentClass		: 'popup_content',
-				preloaderContent    : '<p class="preloader">Loading</p>',
-				activeClass         : 'popup_active',
-				hideFlash           : false,
-				speed				: 200,
+				backClass : 'popup_back',
+				backOpacity : 0.7,
+				containerClass : 'popup_cont',
+				closeContent : '<div class="popup_close">&times;</div>',
+				markup : '<div class="popup"><div class="popup_content"/></div>',
+				contentClass : 'popup_content',
+				preloaderContent : '<p class="preloader">Loading</p>',
+				activeClass : 'popup_active',
+				hideFlash : false,
+				speed : 200,
+				popupPlaceholderClass : 'popup_placeholder',
+				keepInlineChanges :  true,
 
 				// Content
-				modal               : false,
-				content             : null,
-				type                : 'auto',
-				width               : null,
-				height              : null,
+				modal : false,
+				content : null,
+				type : 'auto',
+				width : null,
+				height : null,
 
 				// Params
-				typeParam			: 'pt',
-				widthParam			: 'pw',
-				heightParam			: 'ph',
+				typeParam : 'pt',
+				widthParam : 'pw',
+				heightParam : 'ph',
 
 				// Callbacks
-				beforeOpen          : function(type){},
-				afterOpen           : function(){},
-				beforeClose         : function(){},
-				afterClose          : function(){},
-				error               : function(){},
-				show				: function($popup, $back){
+				beforeOpen : function(type){},
+				afterOpen : function(){},
+				beforeClose : function(){},
+				afterClose : function(){},
+				error : function(){},
+				show : function($popup, $back){
 
 					var plugin = this;
 
@@ -98,7 +100,7 @@
 						});
 
 				},
-				replaced			: function($popup, $back){
+				replaced : function($popup, $back){
 
 					// Center the popup and call the open callback
 					this
@@ -106,7 +108,7 @@
 						.o.afterOpen.call(this);
 
 				},
-				hide				: function($popup, $back){
+				hide : function($popup, $back){
 
 					if( $popup !== undefined ){
 
@@ -116,13 +118,24 @@
 					}
 
 				},
-				types				: {
-					inline				: function(content, callback){
+				types : {
+					inline : function(content, callback){
 
-						callback.call(this, $(content).html());
+						var $content = $(content);
+
+						$content
+							.addClass(p.o.popupPlaceholderClass);
+
+						// If we don't want to keep any inline changes,
+						// get a fresh copy now
+						if( !p.o.keepInlineChanges ){
+							cachedContent = $content.html();
+						}
+
+						callback.call(this, $content.children());
 
 					},
-					image				: function(content, callback){
+					image : function(content, callback){
 
 						var plugin = this;
 
@@ -157,14 +170,14 @@
 							});
 
 					},
-					external				: function(content, callback){
+					external : function(content, callback){
 
 						var $frame = $('<iframe />')
 							.attr({
-								src             : content,
-								frameborder     : 0,
-								width           : p.width,
-								height          : p.height
+								src : content,
+								frameborder : 0,
+								width : p.width,
+								height : p.height
 							});
 
 							callback.call(this, $frame);
@@ -188,11 +201,11 @@
 					ajax					: function(content, callback){
 
 						$.ajax({
-							url         : content,
-							success     : function(data){
+							url : content,
+							success : function(data){
 								callback.call(this, data);
 							},
-							error       : function(data){
+							error : function(data){
 								p.o.error.call(p, content, 'ajax');
 							}
 						});
@@ -201,6 +214,8 @@
 				}
 			},
 			imageTypes = ['png', 'jpg', 'gif'],
+			type,
+			cachedContent,
 			$back,
 			$pCont,
 			$close,
@@ -215,11 +230,11 @@
 		 * Opens a new popup window
 		 *
 		 * @param  {string} content
-		 * @param  {string} type
+		 * @param  {string} popupType
 		 * @param  {Object} ele
 		 * @return {void}
 		 */
-		p.open = function(content, type, ele){
+		p.open = function(content, popupType, ele){
 
 			// Get the content
 			content = ( content === undefined || content === '#' )
@@ -293,13 +308,16 @@
 
 			}
 
-			// Get the type
-			type = getValue([type, p.o.type]);
+			// Get the popupType
+			popupType = getValue([popupType, p.o.type]);
 
 			// If it's at auto, guess a real type
-			type = ( type === 'auto' )
+			popupType = ( popupType === 'auto' )
 				? guessType(content)
-				: type;
+				: popupType;
+
+			// Cache the type to use globally
+			type = popupType;
 
 			// Do we have a width set?
 			p.width = ( p.o.width )
@@ -313,16 +331,16 @@
 
 			// If it's not inline, jQuery or a function
 			// it might have params, and they are top priority
-			if( $.inArray(type, ['inline', 'jQuery', 'function']) === -1 ){
+			if( $.inArray(popupType, ['inline', 'jQuery', 'function']) === -1 ){
 
 				var paramType = getParameterByName(p.o.typeParam, content),
 					paramWidth = getParameterByName(p.o.widthParam, content),
 					paramHeight = getParameterByName(p.o.heightParam, content);
 
 				// Do we have an overriding paramter?
-				type = ( paramType !== null )
+				popupType = ( paramType !== null )
 					? paramType
-					: type;
+					: popupType;
 
 				// Do we have an overriding width?
 				p.width = ( paramWidth !== null )
@@ -336,12 +354,12 @@
 			}
 
 			// Callback
-			p.o.beforeOpen.call(p, type);
+			p.o.beforeOpen.call(p, popupType);
 
 			// Show the content based
-			if( p.o.types[type] ){
+			if( p.o.types[popupType] ){
 
-				p.o.types[type].call(p, content, showContent);
+				p.o.types[popupType].call(p, content, showContent);
 
 			}else{
 
@@ -525,6 +543,15 @@
 
 			p.o.beforeClose.call(p);
 
+			// If we got some inline content, cache it
+			// so we can put it back
+			if(
+				type === 'inline' &&
+				p.o.keepInlineChanges
+			){
+				cachedContent = $('.'+p.o.contentClass).html();
+			}
+
 			if( $back !== undefined ){
 
 				// Fade out the back
@@ -574,6 +601,21 @@
 
 			}
 
+			var $popupPlaceholder = $('.'+p.o.popupPlaceholderClass);
+
+			// If we got inline content
+			// put it back
+			if(
+				type == 'inline' &&
+				$popupPlaceholder.length
+			){
+				$popupPlaceholder
+					.html(cachedContent)
+					.removeClass(p.o.popupPlaceholderClass);
+			}
+
+			type = null;
+
 			// Call the afterClose callback
 			p.o.afterClose.call(p);
 
@@ -592,7 +634,7 @@
 
 			// Only need force for IE6
 			$back.css({
-				height  : document.documentElement.clientHeight
+				height : document.documentElement.clientHeight
 			});
 
 			return p;
@@ -615,8 +657,8 @@
 				wH = document.documentElement.clientHeight;
 
 			return {
-				top     : wH * 0.5 - pH * 0.5,
-				left    : wW * 0.5 - pW * 0.5
+				top : wH * 0.5 - pH * 0.5,
+				left : wW * 0.5 - pW * 0.5
 			};
 
 		};
