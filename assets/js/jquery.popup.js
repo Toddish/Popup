@@ -29,7 +29,7 @@
 
 				e.preventDefault();
 
-				popup.open($(this).attr('href'), undefined, this);
+				popup.open(settings.content, undefined, this);
 
 			});
 
