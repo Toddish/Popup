@@ -5,7 +5,7 @@
 	Simple Popup plugin for jQuery
 
 	@author Todd Francis
-	@version 2.1.0
+	@version 2.2.0
 
 -------------------------------*/
 
@@ -22,14 +22,17 @@
 	$.fn.popup = function(settings){
 
 		var selector = this.selector,
-			popup = new $.Popup(settings);
+			popup = new $.Popup(settings),
+			content = settings && settings.content
+				? settings.content
+				: $(this).attr('href');
 
 		$(document)
 			.on('click.popup', selector, function(e){
 
 				e.preventDefault();
 
-				popup.open($(this).attr('href'), undefined, this);
+				popup.open(content, undefined, this);
 
 			});
 
