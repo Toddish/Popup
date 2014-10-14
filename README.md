@@ -26,7 +26,7 @@ Place `/assets/css/popup.css` in `/your/css/folder/`.
 Add this just before your closing `head` tag:
 
 ```html
-<link rel="styesheet" src="/your/css/folder/popup.css"></link>
+<link rel="styesheet" href="/your/css/folder/popup.css">
 ```
 
 Then, place `/assets/js/popup.min.js` in `/your/js/folder/`.
