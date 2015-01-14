@@ -1,0 +1,15 @@
+{
+  "name": "toddish-popup",
+  "main": "assets/js/jwuery.popup.js",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "1.6"
+  },
+  "authors": [
+    { "name": "Todd Francis", "email": "todd@toddish.co.uk", "homepage": "http://toddish.co.uk"}
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Toddish/Popup.git"
+  }
+}
