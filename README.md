@@ -29,12 +29,12 @@ Add this just before your closing `head` tag:
 <link rel="styesheet" href="/your/css/folder/popup.css">
 ```
 
-Then, place `/assets/js/popup.min.js` in `/your/js/folder/`.
+Then, place `/assets/js/jquery.popup.min.js` in `/your/js/folder/`.
 
 Add this just before your closing `body` tag, after you've included jQuery:
 
 ```html
-<script src="/your/js/folder/popup.min.js"></script>
+<script src="/your/js/folder/jquery.popup.min.js"></script>
 ```
 
 ---
