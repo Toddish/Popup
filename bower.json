@@ -1,6 +1,9 @@
 {
   "name": "toddish-popup",
-  "main": "assets/js/jwuery.popup.js",
+  "main": [
+    "assets/js/jquery.popup.js",
+    "assets/css/popup.css"
+  ],
   "license": "MIT",
   "dependencies": {
     "jquery": "1.6"
