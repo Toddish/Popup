@@ -5,7 +5,7 @@
 	Simple Popup plugin for jQuery
 
 	@author Todd Francis
-	@version 2.2.2
+	@version 2.2.3
 
 -------------------------------*/
 
