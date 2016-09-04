@@ -210,7 +210,7 @@
 							success : function(data){
 								callback.call(this, data);
 							},
-							error : function(data){
+							fail : function(data){
 								p.o.error.call(p, content, 'ajax');
 							}
 						});
