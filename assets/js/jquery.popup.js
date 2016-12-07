@@ -25,7 +25,7 @@
 			popup = new $.Popup(settings);
 
 		$(document)
-			.on('click.popup', selector, function(e){
+			.on('click.popup tap.popup', selector, function(e){
 
 				var content = settings && settings.content
 					? settings.content
@@ -287,10 +287,10 @@
 						opacity : p.o.backOpacity
 					}, p.o.speed);
 
-				// If modal isn't specified, bind click event
+				// If modal isn't specified, bind click and tap events
 				if( !p.o.modal ){
 
-					$back.one('click.popup', function(){
+					$back.one('click.popup tap.popup', function(){
 						p.close();
 					});
 
@@ -471,7 +471,7 @@
 
 				// Add in the close button
 				$close = $(p.o.closeContent)
-					.one('click', function(){
+					.one('click tap', function(){
 
 						p.close();
 
